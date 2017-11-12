@@ -16,12 +16,13 @@
     "url": "https://github.com/ZrdZz/Blog-Project/issues"
   },
   "homepage": "https://github.com/ZrdZz/Blog-Project#readme",
-  "devDependencies": {
-    "body-parser": "^1.18.2",
-    "cookies": "^0.7.1",
-    "express": "^4.16.2",
-    "markdown": "^0.5.0",
-    "mongoose": "^4.13.0",
-    "swig": "^1.4.2"
+  "devDependencies": {},
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "koa": "^2.4.1",
+    "koa-router": "^7.2.1",
+    "koa-static": "^4.0.1",
+    "koa-views": "^6.1.1",
+    "mongoose": "^4.13.1"
   }
 }
