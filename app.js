@@ -3,7 +3,8 @@ const views = require('koa-views');
 const static = require('koa-static');
 const Router = require('koa-router');
 const path = require('path');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const body = require('koa-bodyparser');
 
 const admin = require('./routers/admin.js');
 const api = require('./routers/api.js');
@@ -15,6 +16,9 @@ const staticPath = './public';
 
 //配置应用模板
 app.use(views(path.join(__dirname, './views'), {extension: 'ejs'}));
+
+//处理post请求将formData数据解析到ctx.request.body中
+app.use(body());
 
 //设置静态文件托管
 app.use(static(path.join(__dirname, staticPath)));
