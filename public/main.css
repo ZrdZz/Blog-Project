@@ -79,8 +79,16 @@ main aside .line input{
 	width: 150px; 
 }
 
-input[type="submit"]{
+input[type="button"]{
 	margin-left: 64px;
+}
+
+#userInfo{
+	display: block;
+	width: 150px;
+	margin-left: 64px;
+	margin: 0 auto;
+	color: red;
 }
 
 main aside .title{

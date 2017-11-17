@@ -45,16 +45,16 @@
 						<input type="password" name="password">
 					</div>
 					<div class="line">
-						<input type="submit" name="submit" value="登录">
+						<input type="button" name="submit" value="登录" id="loginBtn">
 					</div>
 					<div class="line">
-						<p>还没注册？<a href="javascript:;">马上注册</a></p>
+						<p>还没注册？<a href="javascript:;" id="registerLink">马上注册</a></p>
 					</div>
 				</form>
 			</div>
 			<div id="registerBox" style="display: none">
 				<div class="title">注册</div>
-				<form action="/api/user/register" method="post">
+				<form>
 					<div class="line">
 						<span>用户名:</span>
 						<input type="text" name="username">
@@ -68,10 +68,13 @@
 						<input type="password" name="repassword">
 					</div>
 					<div class="line">
-						<input type="submit" name="submit" value="注册">
+						<span id="userInfo"></span>
 					</div>
 					<div class="line">
-						<p>已有账号？<a href="javascript:;">马上登录</a></p>
+						<input type="button" name="submit" value="注册" id="registerBtn">
+					</div>
+					<div class="line">
+						<p>已有账号？<a href="javascript:;" id="loginLink">马上登录</a></p>
 					</div>
 				</form>
 			</div>
