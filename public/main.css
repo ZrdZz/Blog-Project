@@ -75,6 +75,10 @@ main aside .line span{
 	width: 60px;
 }
 
+#username{
+	text-align: left;
+}
+
 main aside .line input{
 	width: 150px; 
 }
@@ -83,7 +87,7 @@ input[type="button"]{
 	margin-left: 64px;
 }
 
-#userInfo{
+.line .userInfo{
 	display: block;
 	width: 150px;
 	margin-left: 64px;

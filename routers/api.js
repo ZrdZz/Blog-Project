@@ -9,12 +9,14 @@ const api = new Router();
  * 3. 数据库查询用户是否被注册
  */
 
- //统一数据格式
+//统一数据格式
 var responseData = {
 	code: 0,
-	message: ''
+	message: '',
+	userMsg: null
 };
 
+//注册逻辑
 api.post('/user/register', async(ctx) => {
 	var username = ctx.request.body.username,
 	    password = ctx.request.body.password,
@@ -67,5 +69,39 @@ api.post('/user/register', async(ctx) => {
 		})
 	})
 });
+
+//登录逻辑
+api.post('/user/login', async(ctx) => {
+	var username = ctx.request.body.username,
+	    password = ctx.request.body.password;
+
+	//检测用户名或密码是否为空
+	if(username === '' || password === ''){
+		responseData.code = 1;
+		responseData.message = '用户名或密码不能为空';
+		ctx.body = responseData;
+		return;
+	}
+
+	//查询数据库中用户名或密码是否存在,若存在则登陆成功
+	ctx.body = await new Promise(function(resolve, reject){
+		User.findOne({username: username, password: password}, function(err, doc){
+			if(doc){
+				responseData.code = 0;
+				responseData.message = '登录成功';
+				responseData.userMsg = {username: doc.username};
+				resolve(responseData);
+			}else{
+				responseData.code = 2;
+				responseData.message = '用户名或密码错误';
+				resolve(responseData);
+			};
+
+			if(err){
+				reject(err);
+			}
+		})
+	})
+})
 
 module.exports = api;

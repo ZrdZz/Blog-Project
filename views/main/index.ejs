@@ -26,13 +26,16 @@
 			<section></section>
 		</div>
         <aside>
-<!-- 		<div id="userInfo">
+			<div id="userBox" style="display: none">
 				<div class="title"><span>用户信息</span></div>
 				<p class="line">
-					你好,管理员！
+					<span id="username"></span>
 				</p>
-				<p class="line"><span>退出</span></p>
-			</div> -->
+				<p class="line">
+					你好,欢迎光临我的博客！
+				</p>
+				<p class="line"><a href="javascript:;">退出</a></p>
+			</div>
 			<div id="loginBox">
 				<div class="title"><span>登录</span></div>
 				<form>
@@ -46,6 +49,9 @@
 					</div>
 					<div class="line">
 						<input type="button" name="submit" value="登录" id="loginBtn">
+					</div>
+					<div class="line">
+						<span class="userInfo" id="loginInfo"></span>
 					</div>
 					<div class="line">
 						<p>还没注册？<a href="javascript:;" id="registerLink">马上注册</a></p>
@@ -68,7 +74,7 @@
 						<input type="password" name="repassword">
 					</div>
 					<div class="line">
-						<span id="userInfo"></span>
+						<span class="userInfo" id="registerInfo"></span>
 					</div>
 					<div class="line">
 						<input type="button" name="submit" value="注册" id="registerBtn">
