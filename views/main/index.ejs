@@ -26,38 +26,41 @@
 			<section></section>
 		</div>
         <aside>
-			<div id="userBox" style="display: none">
-				<div class="title"><span>用户信息</span></div>
-				<p class="line">
-					<span id="username"></span>
-				</p>
-				<p class="line">
-					你好,欢迎光临我的博客！
-				</p>
-				<p class="line"><a href="javascript:;">退出</a></p>
-			</div>
-			<div id="loginBox">
-				<div class="title"><span>登录</span></div>
-				<form>
-					<div class="line">
-						<span>用户名:</span>
-						<input type="text" name="username">
-					</div>
-					<div class="line">
-						<span>密码:</span>
-						<input type="password" name="password">
-					</div>
-					<div class="line">
-						<input type="button" name="submit" value="登录" id="loginBtn">
-					</div>
-					<div class="line">
-						<span class="userInfo" id="loginInfo"></span>
-					</div>
-					<div class="line">
-						<p>还没注册？<a href="javascript:;" id="registerLink">马上注册</a></p>
-					</div>
-				</form>
-			</div>
+        	<% if(userInfo){ %>  <!-- ejs模板,if选择渲染后另外的部分就不渲染,取不到dom节点 -->
+				<div id="userBox">
+					<div class="title"><span>用户信息</span></div>
+					<p class="line">
+						<span id="username"><%= userInfo.username %></span>
+					</p>
+					<p class="line">
+						你好,欢迎光临我的博客！
+					</p>
+					<p class="line"><a href="javascript:;" id="logoutBtn">退出</a></p>
+			    </div>
+			<% }else{ %>
+				<div id="loginBox">
+					<div class="title"><span>登录</span></div>
+					<form>
+						<div class="line">
+							<span>用户名:</span>
+							<input type="text" name="username">
+						</div>
+						<div class="line">
+							<span>密码:</span>
+							<input type="password" name="password">
+						</div>
+						<div class="line">
+							<input type="button" name="submit" value="登录" id="loginBtn">
+						</div>
+						<div class="line">
+							<span class="userInfo" id="loginInfo"></span>
+						</div>
+						<div class="line">
+							<p>还没注册？<a href="javascript:;" id="registerLink">马上注册</a></p>
+						</div>
+					</form>
+				</div>
+			<% } %>
 			<div id="registerBox" style="display: none">
 				<div class="title">注册</div>
 				<form>

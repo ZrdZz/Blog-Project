@@ -105,4 +105,9 @@ api.post('/user/login', async(ctx) => {
 	})
 })
 
+//登出逻辑
+api.get('/user/logout', async(ctx) => {
+	ctx.cookies.set('userMsg', null);
+})
+
 module.exports = api;

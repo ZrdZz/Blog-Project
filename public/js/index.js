@@ -1,10 +1,14 @@
 const loginBox = document.getElementById('loginBox');
+const registerLink = document.getElementById('registerLink');
+const loginBtn = document.getElementById('loginBtn');
+
 const registerBox = document.getElementById('registerBox');
+const loginLink = document.getElementById('loginLink');
+const registerBtn = document.getElementById('registerBtn')
+
 const userBox = document.getElementById('userBox');
-const loginLink = registerBox.getElementsByTagName('a');
-const registerLink = loginBox.getElementsByTagName('a');
-const registerBtn = registerBox.querySelector('input[type = "button"]');
-const loginBtn = loginBox.querySelector('input[type = "button"]');
+const logoutBtn = document.getElementById('logoutBtn');
+
 
 
 document.addEventListener('click', function(event){
@@ -80,13 +84,24 @@ document.addEventListener('click', function(event){
 				})
                 .then(function(obj){
                 	if(obj.code === 0){
-                		userBox.style.display = "block";
-                		loginBox.style.display = "none"
-						document.getElementById('username').innerHTML = obj.userMsg.username;
+                        //userBox.style.display = "block";
+                 	    //loginBox.style.display = "none"
+						// document.getElementById('username').innerHTML = obj.userMsg.username;
+						window.location.reload();
 					}else{
 						document.getElementById('loginInfo').innerHTML = obj.message;
 					}	
 				})
-			break;			
+			break;	
+	    case 'logoutBtn':
+			var myInit = {
+				credentials: 'include'                //fetch请求默认不带cookie
+			}
+
+	    	fetch('/api/user/logout', myInit)
+	    		.then(function(res){
+	    			window.location.reload();
+	    		})
+	    	break;		
 	}
 })
