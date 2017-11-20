@@ -70,12 +70,13 @@ document.addEventListener('click', function(event){
 			var myInit = {
 				method: 'POST',
 				body: JSON.stringify(data),
-				headers: {'Content-Type': 'application/json'}
+				headers: {'Content-Type': 'application/json'},
+				credentials: 'include'                 //fetch请求默认不带cookie
 			}
 
 			fetch('/api/user/login', myInit)
 				.then(function(res){  //res是包含一个response对象的promise对象
-					return res.json();
+					return res.json(); //返回的也是promise对象
 				})
                 .then(function(obj){
                 	if(obj.code === 0){

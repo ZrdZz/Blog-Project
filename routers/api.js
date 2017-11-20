@@ -89,7 +89,8 @@ api.post('/user/login', async(ctx) => {
 			if(doc){
 				responseData.code = 0;
 				responseData.message = '登录成功';
-				responseData.userMsg = {username: doc.username};
+				responseData.userMsg = {_id: doc._id, username: doc.username};
+				ctx.cookies.set('userMsg', JSON.stringify(responseData.userMsg));
 				resolve(responseData);
 			}else{
 				responseData.code = 2;
