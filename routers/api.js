@@ -50,7 +50,7 @@ api.post('/user/register', async(ctx) => {
 	ctx.body = await new Promise(function(resolve, reject){
 		User.findOne({'username': username}, function(err, doc){
 			if(doc){
-	 			//表示数据库中有纪录
+	 			//表示数据库中有记录
 	 			responseData.code = 4;
 	 			responseData.message = '用户名已被注册';
 	 			resolve(responseData);				
@@ -89,7 +89,7 @@ api.post('/user/login', async(ctx) => {
 			if(doc){
 				responseData.code = 0;
 				responseData.message = '登录成功';
-				responseData.userMsg = {_id: doc._id, username: doc.username};
+				responseData.userMsg = {_id: doc._id, username: doc.username}; //管理员信息不要记录到cookie中
 				ctx.cookies.set('userMsg', JSON.stringify(responseData.userMsg));
 				resolve(responseData);
 			}else{

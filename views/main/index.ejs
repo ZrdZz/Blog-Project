@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>博客</title>
-	<link rel="stylesheet" type="text/css" href="/main.css">
+	<link rel="stylesheet" type="text/css" href="/css/main.css">
 </head>
 <body>
 	<header>
@@ -32,9 +32,17 @@
 					<p class="line">
 						<span id="username"><%= userInfo.username %></span>
 					</p>
-					<p class="line">
-						你好,欢迎光临我的博客！
-					</p>
+
+					<% if(!userInfo.isAdmin){ %>
+						<p class="line">
+							你好,欢迎光临我的博客！
+						</p>
+					<% }else{ %>
+						<p class="line">
+							你好,管理员！<a href="/admin">进入管理</a>
+						</p>	
+					<% } %>
+
 					<p class="line"><a href="javascript:;" id="logoutBtn">退出</a></p>
 			    </div>
 			<% }else{ %>

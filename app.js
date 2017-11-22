@@ -28,7 +28,7 @@ router.use('/admin', admin.routes(), admin.allowedMethods());
 router.use('/api', api.routes(), api.allowedMethods());
 router.use('/', main.routes(), main.allowedMethods());
 
-app.use(router.routes()).use(router.allowedMethods())
+app.use(router.routes()).use(router.allowedMethods());
 
 mongoose.connect('mongodb://localhost/blog', function(err){
 	if(err){

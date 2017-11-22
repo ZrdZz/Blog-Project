@@ -85,7 +85,7 @@ document.addEventListener('click', function(event){
                 .then(function(obj){
                 	if(obj.code === 0){
                         //userBox.style.display = "block";
-                 	    //loginBox.style.display = "none"
+                 	    //loginBox.style.display = "none";
 						// document.getElementById('username').innerHTML = obj.userMsg.username;
 						window.location.reload();
 					}else{
