@@ -1,8 +1,31 @@
 # Blog-Project
 a blog project based on nodejs
 
-## 使用 koa2 + mongoose 做的博客系统
+## 使用 koa2 + mongoose + ejs 做的博客系统
 
-### 记录一些错误
+### 目录结构
+
+- db                  数据库文件
+- schemas             用于定义数据库的结构
+  - users.js
+- models              由schema编译而成的构造器,具有抽象属性和行为,可以对数据库进行增删查改,Model的每一个实例都是一个document
+  - User.js
+- public              存放静态文件
+  - css
+  - js
+  - fonts
+  - images
+- routers             路由
+  - main.js
+  - api.js
+  - admin.js
+- views               模板文件
+  - admin
+  - main
+- app.js              主文件
+
+
+
+
 
 
