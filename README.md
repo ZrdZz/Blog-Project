@@ -26,7 +26,7 @@ a blog project based on nodejs
 
 ### 错误
 
-1. <li><a href="/admin/usermsg/?page=<%= page - 1 %>">上一页</a></li>
+1. <a href="/admin/usermsg/?page=<%= page - 1 %>">上一页</a>
    =前后不要乱加空格,会被转义
    
 
