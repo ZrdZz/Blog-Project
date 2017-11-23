@@ -1,4 +1,4 @@
-# Blog-Project
+Blog-Project
 a blog project based on nodejs
 
 ## 使用 koa2 + mongoose + ejs 做的博客系统
@@ -23,6 +23,12 @@ a blog project based on nodejs
   - admin
   - main
 - app.js              主文件
+
+### 错误
+
+1. `<a href="/admin/usermsg/?page=<%= page - 1 %>">上一页</a>`
+   =前后不要乱加空格,会被转义
+   
 
 
 
