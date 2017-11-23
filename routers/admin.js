@@ -35,10 +35,30 @@ admin.get('/', async(ctx) => {
 })
 
 admin.get('/usermsg', async(ctx) => {
+	var page = Number(ctx.query.page),          //翻到的页数
+	    limit = 4,                              //每页显示的用户数
+	    pages = 0;                              //总页数
+    
+	var count = await new Promise(function(resolve, reject){
+		User.count(function(err, count){
+			if(count){
+				resolve(count);
+			}
 
-	//从数据库读取所有用户数据
-	users = await new Promise(function(resolve, reject){
-		User.find(function(err, doc){
+			if(err){
+				reject(err);
+			}
+		});
+	})
+
+	var users = await new Promise(function(resolve, reject){
+		pages = Math.ceil(count / limit);
+		page = page > pages ? pages : page;         //page不能大于pages,不能小于1
+		page = page < 1 ? 1 : page;
+
+		var skip = (page - 1) * limit;                  //每页从第几个用户信息开始读取
+
+		User.find().limit(limit).skip(skip).exec(function(err, doc){
 			if(doc){
 				resolve(doc);
 			}
@@ -48,8 +68,8 @@ admin.get('/usermsg', async(ctx) => {
 			}
 		})
 	})
-	
-	await ctx.render('admin/usermsg', {userInfo: userInfo, users: users});
+
+	await ctx.render('admin/usermsg', {userInfo: userInfo, users: users, page: page, count: count, limit: limit});
 })
 
 module.exports = admin;
