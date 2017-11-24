@@ -32,7 +32,7 @@ a blog project based on nodejs
    首先,`model || {}`确保即使传入`undefined`,传给View的参数也会默认为{}。
    `Object.assign()`会把除第一个参数外的其它参数的所有属性复制到第一个参数中
    `ctx.state || {}`能把一些公共变量放入`ctx.render`并传给View
-   #### 注:只有use()中的ctx.state可以共享
+   注:只有use()中的ctx.state可以共享
    
 
 
