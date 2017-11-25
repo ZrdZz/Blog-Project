@@ -28,6 +28,11 @@ a blog project based on nodejs
 
 1. `<a href="/admin/usermsg/?page=<%= page - 1 %>">上一页</a>`
    =前后不要乱加空格,会被转义
+2. ctx.render渲染模板时,第二个参数传入的是`Object.assign({}, ctx.state || {}, model || {})`
+   首先,`model || {}`确保即使传入`undefined`,传给View的参数也会默认为{}。
+   `Object.assign()`会把除第一个参数外的其它参数的所有属性复制到第一个参数中
+   `ctx.state || {}`能把一些公共变量放入`ctx.render`并传给View
+   注:只有use()中的ctx.state可以共享
    
 
 
