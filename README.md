@@ -32,7 +32,8 @@ a blog project based on nodejs
    首先,`model || {}`确保即使传入`undefined`,传给View的参数也会默认为{}。
    `Object.assign()`会把除第一个参数外的其它参数的所有属性复制到第一个参数中
    `ctx.state || {}`能把一些公共变量放入`ctx.render`并传给View
-   注:只有use()中的ctx.state可以共享
+   
+注:要想在所有路由中使用某个中间件或数据,就必须在注册这些路由之前,先注册那个中间件(可能吧...有时间把koa2和koa-router源码在研究一下)
    
 
 
