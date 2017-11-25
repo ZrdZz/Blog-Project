@@ -1,5 +1,5 @@
 <ul class="pager">
-    <li class="previous"><a href="/admin/usermsg/?page=<%= page - 1 %>">上一页</a></li>
-    <li> 一共有 <%= count %> 条数据, 每页有 <%= limit %> 条数据, 现在是第 <%= page %> 几页</li>
-    <li class="next"><a href="/admin/usermsg/?page=<%= page + 1 %>">下一页</a></li>
+    <li class="previous"><a href="/admin/usermsg/?page=<%= userMsg.page - 1 %>">上一页</a></li>
+    <li> 一共有 <%= userMsg.count %> 条数据, 每页有 <%= userMsg.limit %> 条数据, 现在是第 <%= userMsg.page %> 页</li>
+    <li class="next"><a href="/admin/usermsg/?page=<%= userMsg.page + 1 %>">下一页</a></li>
 </ul>

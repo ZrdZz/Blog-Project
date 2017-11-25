@@ -3,12 +3,28 @@ const User = require('../models/User.js');
 
 const admin = new Router();
 
-var userInfo = null; 
+admin.use(async(ctx, next) => {  
+	var count = await new Promise(function(resolve, reject){
+		User.count(function(err, count){
+			if(count){
+				resolve(count);
+			}
 
-admin.use(async(ctx, next) => {              
+			if(err){
+				reject(err);
+			}
+		});
+	})
+	ctx.state.userMsg = {
+    	page: Number(ctx.query.page) || 1,        //翻到的页数
+    	limit: 4,                                 //每页显示的用户数
+    	pages: 0,                                 //总页数
+    	count: count                              //用户信息数量
+    }
 
 	if(ctx.cookies.get('userMsg')){   
-		userInfo = JSON.parse(ctx.cookies.get('userMsg'));
+		ctx.state.userInfo = JSON.parse(ctx.cookies.get('userMsg'));
+		var userInfo = ctx.state.userInfo;
 
 		userInfo.isAdmin = await new Promise(function(resolve, reject){
 			User.findById(userInfo._id, function(err, doc){
@@ -31,34 +47,42 @@ admin.use(async(ctx, next) => {
 })
 
 admin.get('/', async(ctx) => {
-	await ctx.render('admin/index', {userInfo: userInfo}); //模板路径
+	await ctx.render('admin/index'); //模板路径
 })
 
-admin.get('/usermsg', async(ctx) => {
-	var page = Number(ctx.query.page),          //翻到的页数
-	    limit = 4,                              //每页显示的用户数
-	    pages = 0;                              //总页数
-    
-	var count = await new Promise(function(resolve, reject){
-		User.count(function(err, count){
-			if(count){
-				resolve(count);
-			}
+//用户信息页面
+admin.get('/usermsg', async(ctx) => {    
+	//如果想在所有路由中使用数据,就必须在注册路由前,注册一个中间件得到她
 
-			if(err){
-				reject(err);
-			}
-		});
-	})
+	// var count = await new Promise(function(resolve, reject){
+	// 	User.count(function(err, count){
+	// 		if(count){
+	// 			resolve(count);
+	// 		}
 
-	var users = await new Promise(function(resolve, reject){
-		pages = Math.ceil(count / limit);
-		page = page > pages ? pages : page;         //page不能大于pages,不能小于1
-		page = page < 1 ? 1 : page;
+	// 		if(err){
+	// 			reject(err);
+	// 		}
+	// 	});
+	// })
 
-		var skip = (page - 1) * limit;                  //每页从第几个用户信息开始读取
+ //    ctx.state.userMsg = {
+ //    	page: Number(ctx.query.page) || 1,        //翻到的页数
+ //    	limit: 4,                            //每页显示的用户数
+ //    	pages: 0,                            //总页数
+ //    	count: count                         //用户信息数量
+ //    }
 
-		User.find().limit(limit).skip(skip).exec(function(err, doc){
+	var userMsg = ctx.state.userMsg;
+
+	ctx.state.users = await new Promise(function(resolve, reject){
+		userMsg.pages = Math.ceil(userMsg.count / userMsg.limit);
+		userMsg.page = userMsg.page > userMsg.pages ? userMsg.pages : userMsg.page;         //page不能大于pages,不能小于1
+		userMsg.page = userMsg.page < 1 ? 1 : userMsg.page;
+
+		var skip = (userMsg.page - 1) * userMsg.limit;                  //每页从第几个用户信息开始读取
+
+		User.find().limit(userMsg.limit).skip(skip).exec(function(err, doc){
 			if(doc){
 				resolve(doc);
 			}
@@ -69,7 +93,12 @@ admin.get('/usermsg', async(ctx) => {
 		})
 	})
 
-	await ctx.render('admin/usermsg', {userInfo: userInfo, users: users, page: page, count: count, limit: limit});
+	await ctx.render('admin/usermsg');
+})
+
+//博客分类页面
+admin.get('/category', async(ctx) => {
+	await ctx.render('admin/category');
 })
 
 module.exports = admin;
