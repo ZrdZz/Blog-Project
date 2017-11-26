@@ -1,3 +1,4 @@
+
 Blog-Project
 a blog project based on nodejs
 
@@ -33,7 +34,9 @@ a blog project based on nodejs
    `Object.assign()`会把除第一个参数外的其它参数的所有属性复制到第一个参数中
    `ctx.state || {}`能把一些公共变量放入`ctx.render`并传给View
    
-注:要想在所有路由中使用某个中间件或数据,就必须在注册这些路由之前,先注册那个中间件,因为通过use注册的中间件会在匹配的路由回调之前调用(有时间把koa2和koa-router源码在研究一下)
+注:通过`use()`来注册中间件，中间件会按照顺序执行，并会在匹配的路由的回调之前调用,对于不匹配的路由则不会调用,如果注册的路由少了`await next()`, 则之后的中间件以及被匹配的路由的回调就不会被调用(有时间把koa2和koa-router源码在研究一下)
+
+每个请求都会创建一个ctx上下文,在这个请求的中间件中可以共享`ctx.state`
    
 
 
