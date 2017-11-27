@@ -1,0 +1,32 @@
+<%- include('layout') %>
+
+<ol class="breadcrumb">
+  <li><a href="/admin">管理首页</a></li>
+  <li><span>分类列表</span></li>
+</ol>
+
+<h3>分类列表</h3>
+
+<table class="table table-hover table-striped">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>分类名称</th>
+			<th>操作</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		<% for(var category of categories){ %>
+			<tr>
+				<td> <%= category._id %> </td>
+				<td> <%= category.name %> </td>
+				<td> <a href="/admin/category/edit?id=<%= category._id %>">修改</a> | 
+				     <a href="/admin/category/delete?id=<%= category._id %>">删除</a></td>
+			</tr>
+		<% } %>
+
+	</tbody>
+</table>
+
+<%- include('page') %>

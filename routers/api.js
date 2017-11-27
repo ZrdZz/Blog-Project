@@ -48,7 +48,7 @@ api.post('/user/register', async(ctx) => {
 
     //检测用户名是否已被注册
 	ctx.body = await new Promise(function(resolve, reject){
-		User.findOne({'username': username}, function(err, doc){
+		User.findOne({username: username}, function(err, doc){
 			if(doc){
 	 			//表示数据库中有记录
 	 			responseData.code = 4;
