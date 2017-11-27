@@ -1,5 +1,6 @@
 const Router = require('koa-router');
-const User = require('../models/User.js');
+const User = require('../models/User');
+const Category = require('../models/Category')
 
 const main = new Router();
 
@@ -24,7 +25,20 @@ main.get('/', async(ctx) => {
 		})
 	}
 
-	await ctx.render('main/index', {userInfo: userInfo});
+	//获取博客分类
+	var categories = await new Promise(function(resolve, reject){
+		Category.find().exec(function(err, doc){
+			if(doc){
+				resolve(doc);
+			}
+				
+			if(err){
+				reject(err);
+			}
+		})
+	})
+	
+	await ctx.render('main/index', {userInfo: userInfo, categories: categories});
 })
 
 module.exports = main;

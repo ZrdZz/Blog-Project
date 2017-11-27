@@ -1,6 +1,7 @@
 const Router = require('koa-router');
 const User = require('../models/User');
 const Category = require('../models/Category');
+const Content = require('../models/Content');
 
 const admin = new Router();
 
@@ -41,6 +42,24 @@ admin.use(async(ctx, next) => {
     	pages: 0,                                 
     	categoryCount: categoryCount                      
     }
+
+  	var contentCount = await new Promise(function(resolve, reject){
+		Content.count(function(err, contentCount){
+			if(contentCount){
+				resolve(contentCount);
+			}
+
+			if(err){
+				reject(err);
+			}
+		});
+	})
+	ctx.state.contentMsg = {
+    	page: Number(ctx.query.page) || 1,      
+    	limit: 4,                                
+    	pages: 0,                                 
+    	contentCount: contentCount                      
+    }  
 
 	if(ctx.cookies.get('userMsg')){   
 		ctx.state.userInfo = JSON.parse(ctx.cookies.get('userMsg'));
@@ -127,7 +146,8 @@ admin.get('/category', async(ctx) => {
 
 		var skip = (categoryMsg.page - 1) * categoryMsg.limit;                 
 
-		Category.find().limit(categoryMsg.limit).skip(skip).exec(function(err, doc){
+		//_id中包含时间戳,-1是降序,1是升序
+		Category.find().sort({_id: -1}).limit(categoryMsg.limit).skip(skip).exec(function(err, doc){
 			if(doc){
 				resolve(doc);
 			}
@@ -246,7 +266,7 @@ admin.post('/category/edit', async(ctx) => {
 		}else{
 			//检查数据库中是否有相同名称的分类
 			var ctgIsExist = await new Promise(function(resolve, reject){
-				Category.find({_id: {$ne: id}, name: name}, function(err, doc){
+				Category.find({_id: {$ne: id}, name: name}, function(err, doc){  //用findOne()出错？？？
 					if(doc){
 						resolve(doc);
 					}
@@ -257,7 +277,7 @@ admin.post('/category/edit', async(ctx) => {
 				})
 			})
 
-			if(ctgIsExist.length > 0){   //若返回空数组也为true
+			if(ctgIsExist.length > 0){   //find()返回一个对象,findOne()返回一个数组
 				await ctx.render('admin/error', {message: '数据库已存在同名分类'})
 			}else{				
 				await new Promise(function(resolve, reject){
@@ -275,6 +295,67 @@ admin.post('/category/edit', async(ctx) => {
 	}else{
 		await ctx.render('admin/error', {message: '分类信息不存在'})
 	}
+})
+
+//内容首页
+admin.get('/content', async(ctx) => {
+	var contentMsg = ctx.state.contentMsg;
+
+	ctx.state.contents = await new Promise(function(resolve, reject){
+		contentMsg.pages = Math.ceil(contentMsg.contentCount / contentMsg.limit);
+		contentMsg.page = contentMsg.page > contentMsg.pages ? contentMsg.pages : contentMsg.page;         //page不能大于pages,不能小于1
+		contentMsg.page = contentMsg.page < 1 ? 1 : contentMsg.page;
+
+		var skip = (contentMsg.page - 1) * contentMsg.limit;                 
+
+		//_id中包含时间戳,-1是降序,1是升序
+		Content.find().limit(contentMsg.limit).skip(skip).exec(function(err, doc){
+			if(doc){
+				resolve(doc);
+			}
+
+			if(err){
+				reject(err);
+			}
+		})
+	})
+
+	await ctx.render('admin/content_index');
+})
+
+//内容添加
+admin.get('/content/add', async(ctx) => {
+	var categories = await new Promise(function(resolve, reject){
+		Category.find().exec(function(err, doc){
+			if(doc){
+				resolve(doc);
+			}
+
+			if(err){
+				reject(err);
+			}
+		})
+	})
+
+	await ctx.render('admin/content_add', {categories: categories})
+})
+
+//内容保存
+admin.post('/content/add', async(ctx) => {
+	if(ctx.request.body.title && ctx.request.body.description && ctx.request.body.content){
+		var content = new Content({
+			category: ctx.request.body.category,
+			title: ctx.request.body.title,
+			description: ctx.request.body.description,
+			content: ctx.request.body.content
+		})
+
+		content.save();
+		await ctx.render('admin/success', {message: '保存成功', url: '/admin/content'});
+		return;
+	}
+
+	await ctx.render('admin/error', {message: '各项信息不能为空!'})
 })
 
 module.exports = admin;
