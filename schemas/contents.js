@@ -7,7 +7,7 @@ module.exports = new mongoose.Schema({
 		//类型
 		type: mongoose.Schema.Types.ObjectId,
 		//引用
-		ref: 'Content'
+		ref: 'Category'
 	},
 
 	//标题
@@ -17,6 +17,24 @@ module.exports = new mongoose.Schema({
 	description: {
 		type: String,
 		default: ''
+	},
+
+	//时间
+	addTime: {
+		type: Date,
+		default: Date.now
+	},
+
+	//阅读量
+	views: {
+		type: Number,
+		default: 0
+	},
+
+	//关联字段-用户id
+	user: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'User'
 	},
 
 	//内容

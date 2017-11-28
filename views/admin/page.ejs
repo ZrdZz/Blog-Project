@@ -1,4 +1,6 @@
-<% var users = users; if(users){ %>
+<% var users = users, categories = categories, contents = contents; %>
+
+<% if(users){ %>
 
 <ul class="pager">
     <li class="previous"><a href="/admin/usermsg?page=<%= userMsg.page - 1 %>">上一页</a></li>
@@ -6,12 +8,20 @@
     <li class="next"><a href="/admin/usermsg?page=<%= userMsg.page + 1 %>">下一页</a></li>
 </ul>
 
-<% }else{ %>
+<% }else if(categories){ %>
 
 <ul class="pager">
     <li class="previous"><a href="/admin/category/?page=<%= categoryMsg.page - 1 %>">上一页</a></li>
     <li> 一共有 <%= categoryMsg.categoryCount %> 条数据, 每页有 <%= categoryMsg.limit %> 条数据, 现在是第 <%= categoryMsg.page %> 页</li>
     <li class="next"><a href="/admin/category/?page=<%= categoryMsg.page + 1 %>">下一页</a></li>
+</ul>
+
+<% }else{ %>
+
+<ul class="pager">
+    <li class="previous"><a href="/admin/content/?page=<%= contentMsg.page - 1 %>">上一页</a></li>
+    <li> 一共有 <%= contentMsg.contentCount %> 条数据, 每页有 <%= contentMsg.limit %> 条数据, 现在是第 <%= contentMsg.page %> 页</li>
+    <li class="next"><a href="/admin/content/?page=<%= contentMsg.page + 1 %>">下一页</a></li>
 </ul>
 
 <% } %>

@@ -7,6 +7,9 @@ const admin = new Router();
 
 //在这个中间件中得到模板所需的数据
 admin.use(async(ctx, next) => {  
+	//用来格式化日期的一个库,用在模板中
+	ctx.state.moment = require('moment');
+
 	var userCount = await new Promise(function(resolve, reject){
 		User.count(function(err, userCount){
 			if(userCount){
@@ -286,7 +289,7 @@ admin.post('/category/edit', async(ctx) => {
 							reject(err);
 						}
 
-						resolve(num);
+						resolve();
 					});
 				})
 				await ctx.render('admin/success', {message: '修改成功', url: '/admin/category'})
@@ -295,6 +298,22 @@ admin.post('/category/edit', async(ctx) => {
 	}else{
 		await ctx.render('admin/error', {message: '分类信息不存在'})
 	}
+})
+
+//分类删除
+admin.get('/category/delete', async(ctx) => {
+	var id = ctx.query.id || '';
+
+	await new Promise(function(resolve, reject){
+		Category.remove({_id: id},function(err){
+			if(err){
+				reject(err);
+			}
+			resolve();
+		});
+
+	})
+	await ctx.render('admin/success', {message: '删除成功', url: '/admin/category'})
 })
 
 //内容首页
@@ -308,8 +327,7 @@ admin.get('/content', async(ctx) => {
 
 		var skip = (contentMsg.page - 1) * contentMsg.limit;                 
 
-		//_id中包含时间戳,-1是降序,1是升序
-		Content.find().limit(contentMsg.limit).skip(skip).exec(function(err, doc){
+		Content.find().limit(contentMsg.limit).skip(skip).populate(['category', 'user']).exec(function(err, doc){
 			if(doc){
 				resolve(doc);
 			}
@@ -340,10 +358,11 @@ admin.get('/content/add', async(ctx) => {
 	await ctx.render('admin/content_add', {categories: categories})
 })
 
-//内容保存
+//内容添加
 admin.post('/content/add', async(ctx) => {
 	if(ctx.request.body.title && ctx.request.body.description && ctx.request.body.content){
 		var content = new Content({
+			user: ctx.state.userInfo._id,
 			category: ctx.request.body.category,
 			title: ctx.request.body.title,
 			description: ctx.request.body.description,
@@ -358,4 +377,79 @@ admin.post('/content/add', async(ctx) => {
 	await ctx.render('admin/error', {message: '各项信息不能为空!'})
 })
 
+//编辑内容页面
+admin.get('/content/edit', async(ctx) => {
+	var id = ctx.query.id || '';
+
+    //查询数据库中是否存在
+	var isExist = await new Promise(function(resolve, reject){
+		Content.findOne({_id: id}).populate('category').exec(function(err, doc){
+			if(doc){
+				resolve(doc)
+			}
+
+			if(err){
+				reject(err);
+			}
+		})
+	})
+
+	var categories = await new Promise(function(resolve, reject){
+		Category.find().exec(function(err, doc){
+			if(doc){
+				resolve(doc);
+			}
+
+			if(err){
+				reject(err);
+			}
+		})
+	})
+      
+	if(isExist){
+		await ctx.render('admin/content_edit', {content: isExist, categories: categories});
+	}else{
+		await ctx.render('admin/error', {message: '内容信息不存在'})
+	}
+})
+
+//编辑内容保存
+admin.post('/content/edit', async(ctx) => {
+	var id = ctx.query.id || '';
+
+	if(ctx.request.body.title && ctx.request.body.description && ctx.request.body.content){
+		await new Promise(function(resolve, reject){
+			Content.update({_id: id},{
+				category: ctx.request.body.category,
+				title: ctx.request.body.title,
+				description: ctx.request.body.description,
+				content: ctx.request.body.content
+		    }, function(err, num){
+				if(err){
+					reject(err);
+				}
+				resolve();
+			});
+		})
+
+		await ctx.render('admin/success', {message: '保存成功', url: '/admin/content'});
+	}
+
+})
+
+//内容删除
+admin.get('/content/delete', async(ctx) => {
+	var id = ctx.query.id || '';
+
+	await new Promise(function(resolve, reject){
+		Content.remove({_id: id},function(err){
+			if(err){
+				reject(err);
+			}
+			resolve();
+		});
+	})
+
+	await ctx.render('admin/success', {message: '删除成功', url: '/admin/content'})
+})
 module.exports = admin;
