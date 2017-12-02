@@ -1,5 +1,7 @@
 const Router = require('koa-router');
 const User = require('../models/User.js');
+const Content = require('../models/Content');
+const moment = require('moment');
 
 const api = new Router();
 
@@ -108,6 +110,49 @@ api.post('/user/login', async(ctx) => {
 //登出逻辑
 api.get('/user/logout', async(ctx) => {
 	ctx.cookies.set('userMsg', null);
+})
+
+//评论提交
+api.post('/comment/post', async(ctx) => {
+	var contentId = ctx.request.body.contentId,
+	    data = {
+	    	username: ctx.request.body.username,
+	    	date: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+	    	content: ctx.request.body.comment
+	    };
+
+	ctx.body = await new Promise(function(resolve, reject){
+		Content.findOne({_id: contentId}).exec(function(err, doc){
+			if(doc){
+				doc.comments.push(data);     //将评论添加进数组
+				doc.save();
+				responseData.data = doc;     //保存的是这篇文章的相关信息
+				resolve(responseData)
+			}
+
+			if(err){
+				reject(err);
+			}
+		})
+	})
+})
+
+//进入内容详情页显示评论
+api.post('/comment', async(ctx) => {
+	var contentId = ctx.request.body.contentId;
+
+	ctx.body = await new Promise(function(resolve, reject){
+		Content.findOne({_id: contentId}).exec(function(err, doc){
+			if(doc){		
+				responseData.data = doc;  
+				resolve(responseData)
+			}
+
+			if(err){
+				reject(err);
+			}
+		})
+	})
 })
 
 module.exports = api;

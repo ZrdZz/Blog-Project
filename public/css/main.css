@@ -25,9 +25,12 @@ nav .menu{
 }
 
 nav a{
+	display: inline-block;
 	line-height: 50px;
-	padding: 10px 15px;
+	height: 50px;
 	text-decoration: none;
+	padding-right: 15px;
+	padding-left: 15px;
 }
 
 nav a:hover{
@@ -51,6 +54,52 @@ main section{
 	margin-bottom: 20px;
 	background: white;
 	box-shadow: 2px 2px 2px #c7c5c5;
+	text-align: center;
+	position: relative;
+}
+
+main section h2{
+	padding-top: 5px;
+	margin-bottom: 10px;
+}
+
+#introduction span{
+	color: #00c0ff;
+}
+
+#description{
+	text-align: left;
+	padding: 20px 0 0 20px
+}
+
+#article{
+	position: absolute;
+	bottom: 20px;
+	left: 20px;
+	width: 100px;
+	height: 30px;
+	background: orange;
+	border-radius: 5px;
+}
+
+#article a{
+	line-height: 30px;
+	text-decoration: none;
+	color: white;
+}
+
+#pages{
+	height: 50px;
+}
+
+#pages a{
+	line-height: 50px;
+	text-decoration: none;
+}
+
+#pages span{
+	line-height: 50px;
+	margin: 0 100px;
 }
 
 main aside{
@@ -100,3 +149,127 @@ main aside .title{
 	font-size: 18px;
 	border-bottom: 3px solid #eee;
 }
+
+/*选中分类时效果*/
+.focus{
+	border-bottom: 3px solid blue;
+}
+
+/*内容全文样式*/
+#contentarea{
+	width: 70%;
+	background: white;
+	margin: 20px auto;
+	padding: 20px;
+	text-align: center;
+	box-shadow: 3px 3px #efe9e9;
+	border-radius: 3px; 
+}
+
+#introduction{
+	margin: 20px 0;
+}
+
+#content{
+	width: 100%;
+	border: 2px dotted #eee;
+}
+
+#back{
+	width: 100px;
+	height: 30px;
+	background: #c9c9d2;
+	position: fixed;
+	top: 300px;
+	right: 10px;
+	border-radius: 5px;
+	text-align: center;
+}
+
+#back a{
+	display: inline-block;
+	width: 100%;
+	text-decoration: none;
+	line-height: 30px;
+	color: white;
+}
+
+/*评论样式*/
+#commentarea{
+	width: 70%;
+	margin: 20px auto;
+	padding: 20px;
+	background: white;
+	text-align: center;
+}
+
+#messageContent{
+	width: 60%;
+	height: 100px;
+	border: 2px dotted #b5b5eb;
+	margin: 20px auto;
+}
+
+#messageBtn{
+	width: 60%;
+	height: 30px;
+}
+
+#warnning{
+	background: orange;
+	width: 60%;
+	margin: 20px auto;
+	padding: 10px;
+}
+
+#header{
+	width: 60%;
+	height: 30px;
+	line-height: 30px;
+	margin: 10px auto;
+}
+
+#header strong{
+	margin-left: 10px;
+	float: left;
+}
+
+#header span{
+	margin-right: 10px;
+	float: right;
+}
+
+#commentsList{
+	width: 60%;
+	margin: 20px auto;
+}
+
+#commentItem{
+	border-bottom: 2px dotted #eee;
+}
+
+#userMsg{
+	overflow: hidden;
+}
+
+#commentUser{
+	float: left;
+}
+
+#commentTime{
+	float: right;
+}
+
+#comment{
+	margin-top: 30px;
+	margin-bottom: 10px;
+	width: 100%;
+	text-align: left;
+}
+
+/*通过input来传递contentId*/
+#contentId, #username{
+	display: none;
+}
+
+

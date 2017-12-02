@@ -1,0 +1,35 @@
+<%- include('layout') %>
+
+<div id="back"><a href="/?category=<%= categoryId.category %>">返回</a></div>
+<div id="contentarea">
+	<h2> <%= contentarea.title %> </h2>
+	<p id="introduction">
+		作者: <span><%= contentarea.user.username %></span> -
+		时间: <span><%= moment(contentarea.addTime).format('YYYY-MM-DD HH:mm:ss') %></span> -
+		阅读: <span><%= contentarea.views %></span> -
+		评论: <span><%= contentarea.comments.length %></span>
+	</p>
+	<p id="content"><%= contentarea.content %></p>	
+</div>
+
+<div id="commentarea">
+	<div id="header"><strong>评论</strong><span>一共有 <em id="messageCount">0</em> 条</span></div>
+
+	<% var userInfo = userInfo;if(userInfo){ %>
+		<div>
+			<textarea id="messageContent"></textarea>
+			<button id="messageBtn">提交</button>
+			<input type="text" id="contentId" value=<%= contentarea._id %>>
+			<input type="text" id="username" value=<%= contentarea.user.username %>>
+		</div>
+	<% }else{ %>
+		<p id="warnning">您还没有登陆,请先登录</p>
+	<% } %>
+
+	<div id="commentsList">
+	</div>
+
+
+</div>
+
+<script type="text/javascript" src="/js/comments.js"></script>

@@ -1,34 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>博客</title>
-	<link rel="stylesheet" type="text/css" href="/css/main.css">
-</head>
-<body>
-	<header>
-		<img src="/images/timg1.jpg">
-	</header>
+<%- include('layout') %>
 
-	<nav>
-		<div class = "menu">
-			<a href="#">首页</a>
-			
-			<% for(var category of categories){ %>
-				<a href="/"> <%= category.name %> </a>
+<main>
+	<div class="leftBox">
+			<% for(var content of data.contents){ %>
+				<section>
+					<h2> <%= content.title %> </h2>
+					<p id="introduction">
+						作者: <span><%= content.user.username %></span> -
+						时间: <span><%= moment(content.addTime).format('YYYY-MM-DD HH:mm:ss') %></span> -
+						阅读: <span><%= content.views %></span> -
+						评论: <span><%= content.comments.length %></span>
+					</p>
+					<p id="description"> <%= content.description %> </p>	
+					<div id="article"><a href="/view?category=<%= categoryId.category %>&content=<%= content._id %>">阅读全文</a></div>
+				</section>				
 			<% } %>
 
-		</div>
-	</nav>
+			<section id="pages">
 
-	<main>
-		<div class="leftBox">
-			<section></section>
-			<section></section>
-			<section></section>
-		</div>
-        <aside>
-        	<% if(userInfo){ %>  <!-- ejs模板,if选择渲染后另外的部分就不渲染,取不到dom节点 -->
+				<% if(contentMsg.page <= 1){ %>
+					<a href="javascript:;">没有上一页了</a>
+				<% }else{ %>
+					<a href="/?category=<%= categoryId.category %>&page=<%= contentMsg.page - 1 %>">上一页</a>
+				<% } %>
+
+				<% if(contentMsg.pages > 0){ %>
+					<span><%= contentMsg.page %> / <%= contentMsg.pages %></span>
+				<% }else{ %>
+					<span>当前分类下没有内容</span>
+				<% } %>
+
+				<% if(contentMsg.page >= contentMsg.pages){ %>
+					<a href="javascript:;">没有下一页了</a>
+				<% }else{ %>
+					<a href="/?category=<%= categoryId.category %>&page=<%= contentMsg.page + 1 %>">下一页</a>
+				<% } %>
+
+			</section>
+	</div>
+	<aside>
+        <% var userInfo = userInfo; if(userInfo){ %>  <!-- ejs模板,if选择渲染后另外的部分就不渲染,取不到dom节点 -->
 				<div id="userBox">
 					<div class="title"><span>用户信息</span></div>
 					<p class="line">
@@ -47,7 +58,7 @@
 
 					<p class="line"><a href="javascript:;" id="logoutBtn">退出</a></p>
 			    </div>
-			<% }else{ %>
+		<% }else{ %>
 				<div id="loginBox">
 					<div class="title"><span>登录</span></div>
 					<form>
@@ -70,8 +81,8 @@
 						</div>
 					</form>
 				</div>
-			<% } %>
-			<div id="registerBox" style="display: none">
+		<% } %>
+		<div id="registerBox" style="display: none">
 				<div class="title">注册</div>
 				<form>
 					<div class="line">
@@ -96,16 +107,13 @@
 						<p>已有账号？<a href="javascript:;" id="loginLink">马上登录</a></p>
 					</div>
 				</form>
-			</div>
-			<div>
-				<div class="title"><span>社区</span></div>
-				<p class="line"><a href="#">Node</a></p>
-				<p class="line"><a href="#">React</a></p>
-			</div>
-	    </aside>
-	</main>
+		</div>
+		<div>
+			<div class="title"><span>社区</span></div>
+			<p class="line"><a href="#">Node</a></p>
+			<p class="line"><a href="#">React</a></p>
+		</div>
+	</aside>
+</main>
 
-	<footer>Copyright 版权所有,翻版必究</footer>
-	<script type="text/javascript" src="/js/index.js"></script>
-</body>
-</html>
+<script type="text/javascript" src="/js/index.js"></script>

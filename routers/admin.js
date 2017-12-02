@@ -47,7 +47,7 @@ admin.use(async(ctx, next) => {
     }
 
   	var contentCount = await new Promise(function(resolve, reject){
-		Content.count(function(err, contentCount){
+		Content.count(function(err, contentCount){;
 			if(contentCount){
 				resolve(contentCount);
 			}
@@ -326,8 +326,7 @@ admin.get('/content', async(ctx) => {
 		contentMsg.page = contentMsg.page < 1 ? 1 : contentMsg.page;
 
 		var skip = (contentMsg.page - 1) * contentMsg.limit;                 
-
-		Content.find().limit(contentMsg.limit).skip(skip).populate(['category', 'user']).exec(function(err, doc){
+		Content.find().limit(contentMsg.limit).skip(skip).populate(['category', 'user']).sort({addTime: -1}).exec(function(err, doc){
 			if(doc){
 				resolve(doc);
 			}
