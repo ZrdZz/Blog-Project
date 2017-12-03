@@ -21,7 +21,8 @@ a blog project based on nodejs
   - images
 - routers         路由
   - main.js
-  - api.js
+
+- api.js
   - admin.js
 - views           模板文件
   - admin
@@ -65,6 +66,31 @@ koa把很多`async`函数组成处理链,当一个请求到来时,先执行第�
 
 执行顺序如下图:
 ![中间件执行图](http://upload-images.jianshu.io/upload_images/3663059-03622ea2a9ffce2a.jpg)
+
+### 模板引擎的配置和使用
+
+`koa-views`模板渲染中间件,支持很多种引擎,这次用`ejs`
+
+#### API
+`views(root, opts)`
+- `root`: 模板文件存放的位置,必须是绝对路径,所有渲染的模板都是相对于这个路径
+- `opts`: (optional)
+- `opts.extension`: 模板文件默认的扩展,这样使用时就可以只写文件名
+- `opts.map`: 制定一种文件扩展用什么引擎,`views(__dirname, {map: {html: 'nunjucks'}})`,`.html`结尾的文件使用`numjucks`模板引擎
+- `opts.engineSource`: 不懂是什么意思。。
+- `opts.options`: 也没看懂在哪。。
+
+示例:
+```
+const views = require('koa-views');
+
+//必须被用在任何一个路由之前
+app.use(views(__dirname + '/views', {extension: 'ejs'}))
+```
+
+
+
+
 
 
 
