@@ -43,7 +43,7 @@ a blog project based on nodejs
 
 ### koa2基础
 
-####创建工程
+#### 创建工程
 ```
 const Koa = reqiure('koa');     //导入koa
 const app = new Koa();          //创建一个koa对象
