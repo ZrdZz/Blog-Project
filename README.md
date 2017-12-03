@@ -31,6 +31,7 @@ a blog project based on nodejs
 
 ### 错误
 
+
 1. `<a href="/admin/usermsg/?page=<%= page - 1 %>">上一页</a>`
    =前后不要乱加空格,会被转义
 2. ctx.render渲染模板时,第二个参数传入的是`Object.assign({}, ctx.state || {}, model || {})`
@@ -86,7 +87,16 @@ const views = require('koa-views');
 
 //必须被用在任何一个路由之前
 app.use(views(__dirname + '/views', {extension: 'ejs'}))
+app.use(async(ctx) => {
+  let title = 'hello';
+  //用在模板中的一些通用参数可以放在`ctx.state`对象中,默认会传递给模板,若要传一些非通用的可以放在`render`函数的第二个参数中
+  await ctx.render('index', {title});    
+})
 ```
+
+### 静态资源加载
+
+`koa-static`
 
 
 
