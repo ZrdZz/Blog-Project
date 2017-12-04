@@ -132,7 +132,8 @@ const main = new Router();
 
 main.get(...)
     .post(...);
-    
+
+
 //admin.js
 const Router = require('koa-router');
 const admin = new Router();
@@ -155,7 +156,8 @@ fetch是基于Promise设计的
 
 示例:
 ```
-fetch('flowers.jpg')    .then(function(response) {
+fetch('flowers.jpg')    
+    .then(function(response) {
       return response.blob();
     })
     .then(function(myBlob) {
