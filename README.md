@@ -193,24 +193,24 @@ fetch('flowers.jpg')    .then(function(response) {
 
 ```
 var data = {
-		username: registerBox.querySelector('input[name="username"]').value,
-		password: registerBox.querySelector('input[name="password"]').value,
-		repassword: registerBox.querySelector('input[name="repassword"]').value
+    username: registerBox.querySelector('input[name="username"]').value,
+    password: registerBox.querySelector('input[name="password"]').value,
+    repassword: registerBox.querySelector('input[name="repassword"]').value
 }
 
 var myInit = {
-		method: 'POST',
-		body: JSON.stringify(data),
-		headers: {'Content-Type': 'application/json'}
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {'Content-Type': 'application/json'}
 }
 
 fetch('/api/user/register', myInit)
-		.then(function(res){  //res是包含一个response对象的promise对象
-					return res.json();
-		})
-  .then(function(obj){
-					document.getElementById('registerInfo').innerHTML = obj.message;
-		})
+    .then(function(res){  //res是包含一个response对象的promise对象
+	return res.json();
+    })
+    .then(function(obj){
+        document.getElementById('registerInfo').innerHTML = obj.message;
+    })
 ```
 
 
