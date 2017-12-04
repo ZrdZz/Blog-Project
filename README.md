@@ -154,8 +154,7 @@ fetch是基于Promise设计的
 
 示例:
 ```
-fetch('flowers.jpg')
-    .then(function(response) {
+fetch('flowers.jpg')    .then(function(response) {
       return response.blob();
     })
     .then(function(myBlob) {
@@ -170,13 +169,13 @@ fetch('flowers.jpg')
 - `method`：请求使用的方法
 - `headers`: 请求的头信息
 - `body`: 请求的body信息,注意`get`、`head`方法的请求不能包含body信息
-- `mode`: 请求的模式,通过设置这个可以在发起请求阶段就阻止跨域请求,有`same-origin`、`no-cors`、`cors`、`navigate`![MDN](https://developer.mozilla.org/en-US/docs/Web/API/Request/mode)
+- `mode`: 请求的模式,通过设置这个可以在发起请求阶段就阻止跨域请求,有`same-origin`、`no-cors`、`cors`、`navigate`[MDN](https://developer.mozilla.org/en-US/docs/Web/API/Request/mode)
 - `credentials`: 控制请求是否带上`cookie`等信息
     1. `omit`: 请求不带`cookie`
     2. `same-origin`: 同域请求会带`cookie`
     3. `include`: 都会带上`cookie`
-- `cache`: 请求的`cache`模式,详情![MDN](https://developer.mozilla.org/en-US/docs/Web/API/Request/cache)
-- `redirect`: 设置请求如果遇到重定向的返回如何响应 ![MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/GlobalFetch/fetch)
+- `cache`: 请求的`cache`模式,详情[MDN](https://developer.mozilla.org/en-US/docs/Web/API/Request/cache)
+- `redirect`: 设置请求如果遇到重定向的返回如何响应 [MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/GlobalFetch/fetch)
     1. `follow`: 跟随重定向
     2. `error`: 若响应式重定向则报错
     2. `manual`: 手动处理重定向
