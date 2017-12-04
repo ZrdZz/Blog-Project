@@ -41,6 +41,8 @@ a blog project based on nodejs
    
 注:通过`use()`来注册中间件，中间件会按照顺序执行，并会在匹配的路由的回调之前调用,对于不匹配的路由则不会调用,如果注册的路由少了`await next()`, 则之后的中间件以及被匹配的路由的回调就不会被调用(有时间把koa2和koa-router源码在研究一下)
 
+
+
 每个请求都会创建一个ctx上下文,在这个请求的中间件中可以共享`ctx.state`
 
 ### koa2基础
@@ -97,6 +99,15 @@ app.use(async(ctx) => {
 ### 静态资源加载
 
 `koa-static`
+
+示例:
+```
+const static = require('koa-static');
+
+app.use(static(__dirname + '/public'));
+```
+
+
 
 
 
