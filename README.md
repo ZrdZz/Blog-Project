@@ -21,8 +21,7 @@ a blog project based on nodejs
   - images
 - routers         路由
   - main.js
-
-- api.js
+  - api.js
   - admin.js
 - views           模板文件
   - admin
@@ -62,6 +61,8 @@ app.listen(3000);
 ```
 
 上面的异步函数中的`await next()`用于将执行权传到下一个异步函数
+
+
 
 #### koa middleware
 
@@ -105,6 +106,111 @@ app.use(async(ctx) => {
 const static = require('koa-static');
 
 app.use(static(__dirname + '/public'));
+```
+
+### 路由
+
+`koa-router`
+
+示例:
+```
+//app.js
+const Koa = require('koa');
+const Router = require('koa-router');
+
+const app = new Koa();
+const router = new Router();
+
+router.use('/', main.routes(), main.allowedMethods());
+router.use('/admin', admin.routes(), admin.allowedMethods());
+
+app.use(router.routes()).use(router.allowedMethods());
+
+//main.js
+const Router = require('koa-router');
+const main = new Router();
+
+main.get(...)
+    .post(...);
+    
+//admin.js
+const Router = require('koa-router');
+const admin = new Router();
+
+admin.get(...)
+    .post(...);
+```
+
+### 用户注册登录逻辑
+
+页面一打开显示的是登录界面,若无账号点击'马上注册',则会切换到注册界面,这个实现简单,绑定一个点击事件,显示一个隐藏另一个就好了。
+
+注册数据时,通过fetch提交数据到后台
+
+***
+fetch基础
+
+fetch是基于Promise设计的
+
+示例:
+```
+fetch('flowers.jpg')
+    .then(function(response) {
+      return response.blob();
+    })
+    .then(function(myBlob) {
+      var objectURL = URL.createObjectURL(myBlob);
+      myImage.src = objectURL;
+    });
+```
+第一个参数为请求地址,然后会返回一个包含`response`(Response对象)的`promise`的对象,他只是一个`http`响应,并不是一个图片,为了获取图片的内容,需要使用`blob()`方法。
+`blob()`方法在`body mixin`中定义,还有其他方法用于获取其他类型的内容,如`json()`、`text()`、`formData()`
+
+第二个参数可选,是一个可以控制不同配置的对象
+- `method`：请求使用的方法
+- `headers`: 请求的头信息
+- `body`: 请求的body信息,注意`get`、`head`方法的请求不能包含body信息
+- `mode`: 请求的模式,通过设置这个可以在发起请求阶段就阻止跨域请求,有`same-origin`、`no-cors`、`cors`、`navigate`![MDN](https://developer.mozilla.org/en-US/docs/Web/API/Request/mode)
+- `credentials`: 控制请求是否带上`cookie`等信息
+    1. `omit`: 请求不带`cookie`
+    2. `same-origin`: 同域请求会带`cookie`
+    3. `include`: 都会带上`cookie`
+- `cache`: 请求的`cache`模式,详情![MDN](https://developer.mozilla.org/en-US/docs/Web/API/Request/cache)
+- `redirect`: 设置请求如果遇到重定向的返回如何响应 ![MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/GlobalFetch/fetch)
+    1. `follow`: 跟随重定向
+    2. `error`: 若响应式重定向则报错
+    2. `manual`: 手动处理重定向
+- `referrer`: 设置请求的`referrer`字段的值
+- `referrerPolicy`: 设置referer HTTP header
+- `integrity`： 设置请求的subresource integrity
+
+注意: 
+- 当接收到一个代表错误的 HTTP 状态码时,从`fetch()`返回的`Promise`不会被标记为`reject`,即使该HTTP响应的状态码是404或500。它会将`Promise`状态标记为
+  `resolve`(但是会将resolve的返回值的`ok`属性设置为false),仅当网络故障时或请求被阻止时,才会标记为`reject`
+- 默认情况下,`fetch`不会从服务端发送或接收任何`cookie`,如果站点依赖于用户`session`,则会导致未经认证的请求(要发送`cookies`,必须设置`credentials`选
+  项)
+***
+
+```
+var data = {
+		username: registerBox.querySelector('input[name="username"]').value,
+		password: registerBox.querySelector('input[name="password"]').value,
+		repassword: registerBox.querySelector('input[name="repassword"]').value
+}
+
+var myInit = {
+		method: 'POST',
+		body: JSON.stringify(data),
+		headers: {'Content-Type': 'application/json'}
+}
+
+fetch('/api/user/register', myInit)
+		.then(function(res){  //res是包含一个response对象的promise对象
+					return res.json();
+		})
+  .then(function(obj){
+					document.getElementById('registerInfo').innerHTML = obj.message;
+		})
 ```
 
 
