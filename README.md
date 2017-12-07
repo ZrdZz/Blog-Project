@@ -142,11 +142,17 @@ admin.get(...)
     .post(...);
 ```
 
-### 用户注册登录逻辑
+### POST请求处理
+
+对于post请求,`koa-bodyparser`可以将数据解析到`ctx.request.body`中
+```
+const body = require('koa-bodyparser');
+app.use(body());
+```
+
+### 用户注册
 
 页面一打开显示的是登录界面,若无账号点击'马上注册',则会切换到注册界面,这个实现简单,绑定一个点击事件,显示一个隐藏另一个就好了。
-
-注册数据时,通过fetch提交数据到后台
 
 ***
 
@@ -193,6 +199,7 @@ fetch('flowers.jpg')
   项)
 ***
 
+注册账号时,通过fetch提交数据到后台
 ```
 var data = {
     username: registerBox.querySelector('input[name="username"]').value,
@@ -207,13 +214,119 @@ var myInit = {
 }
 
 fetch('/api/user/register', myInit)
-    .then(function(res){  //res是包含一个response对象的promise对象
+    .then(function(res){  
 	return res.json();
     })
     .then(function(obj){
         document.getElementById('registerInfo').innerHTML = obj.message;
     })
 ```
+
+后端接收到数据后先验证一些账号密码等,再检查数据库中是否有记录,若没有则保存到数据库中。
+
+```
+api.post('/user/register', async(ctx) => {
+    var username = ctx.request.body.username,
+	password = ctx.request.body.password,
+	repassword = ctx.request.body.repassword;
+	
+    ...一些验证...
+
+    //检测用户名是否已被注册
+    await User.findOne({username: username}, function(err, doc){
+              if(doc){
+	          //表示数据库中有记录
+	 	  responseData.code = 4;
+	 	  responseData.message = '用户名已被注册';
+	 	  ctx.body = responseData;				
+	      }else{
+		  //保存用户消息到数据库
+                  var user = new User({'username': username, 'password': password});
+		      user.save();
+		  responseData.code = 0;
+	 	  responseData.message = '注册成功';
+	 	  ctx.body = responseData;				
+	      };
+
+	      if(err){
+	           console.log(err);
+	      }
+     })
+});
+```
+
+### 用户登录
+
+通过fetch将账号密码提交到后端
+```
+var data = {
+	username: loginBox.querySelector('input[name="username"]').value,
+	password: loginBox.querySelector('input[name="password"]').value
+}
+var myInit = {
+	method: 'POST',
+	body: JSON.stringify(data),
+	headers: {'Content-Type': 'application/json'},
+	credentials: 'include'      
+}
+
+fetch('/api/user/login', myInit)
+	.then(function(res){  
+	     return res.json(); 
+	})
+        .then(function(obj){
+             if(obj.code === 0){
+                //userBox.style.display = "block";
+                //loginBox.style.display = "none";
+		// document.getElementById('username').innerHTML = obj.userMsg.username;
+		
+		//登录成功后刷新页面,从cookie中取得信息,通过在模板中判断信息是否存在显示不同的部分
+		window.location.reload();
+	     }else{
+		document.getElementById('loginInfo').innerHTML = obj.message;
+	     }	
+	})
+```
+
+后端接收到数据后先做一个简单的验证,然后在数据库中查询,并保存到cookie中
+```
+api.post('/user/login', async(ctx) => {
+    var username = ctx.request.body.username,
+	password = ctx.request.body.password;
+
+    //检测用户名或密码是否为空
+    if(username === '' || password === ''){
+	 responseData.code = 1;
+	 responseData.message = '用户名或密码不能为空';
+	 ctx.body = responseData;
+	 return;
+    }
+
+    //查询数据库中用户名或密码是否存在,若存在则登陆成功,并保存到cookie中
+    await User.findOne({username: username, password: password}, function(err, doc){
+	  if(doc){
+	     responseData.code = 0;
+	     responseData.message = '登录成功';
+	     responseData.userMsg = {_id: doc._id, username: doc.username}; 
+             ctx.cookies.set('userMsg', JSON.stringify(responseData.userMsg));
+	     ctx.body = responseData;
+          }else{
+	     responseData.code = 2;
+             responseData.message = '用户名或密码错误';
+	     ctx.body = responseData;
+	  };
+
+	  if(err){
+	     console.log(err);
+	  }
+     })
+})
+```
+
+
+
+
+
 
 
 
