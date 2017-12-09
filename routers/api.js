@@ -49,27 +49,25 @@ api.post('/user/register', async(ctx) => {
 	}
 
     //检测用户名是否已被注册
-	ctx.body = await new Promise(function(resolve, reject){
-		User.findOne({username: username}, function(err, doc){
+	await User.findOne({username: username}, function(err, doc){
 			if(doc){
 	 			//表示数据库中有记录
 	 			responseData.code = 4;
 	 			responseData.message = '用户名已被注册';
-	 			resolve(responseData);				
+	 			ctx.body = responseData;				
 			}else{
 				//保存用户消息到数据库
 				var user = new User({'username': username, 'password': password});
 				user.save();
 				responseData.code = 0;
 	 			responseData.message = '注册成功';
-	 			resolve(responseData);				
+	 			ctx.body = responseData;				
 			};
 
 			if(err){
-				reject(err);
+				console.log(err);
 			}
-		})
-	})
+	    })
 });
 
 //登录逻辑
@@ -86,25 +84,23 @@ api.post('/user/login', async(ctx) => {
 	}
 
 	//查询数据库中用户名或密码是否存在,若存在则登陆成功
-	ctx.body = await new Promise(function(resolve, reject){
-		User.findOne({username: username, password: password}, function(err, doc){
+	await User.findOne({username: username, password: password}, function(err, doc){
 			if(doc){
 				responseData.code = 0;
 				responseData.message = '登录成功';
-				responseData.userMsg = {_id: doc._id, username: doc.username}; //管理员信息不要记录到cookie中
+				responseData.userMsg = {_id: doc._id, username: doc.username}; 
 				ctx.cookies.set('userMsg', JSON.stringify(responseData.userMsg));
-				resolve(responseData);
+				ctx.body = responseData;
 			}else{
 				responseData.code = 2;
 				responseData.message = '用户名或密码错误';
-				resolve(responseData);
+				ctx.body = responseData;
 			};
 
 			if(err){
-				reject(err);
+				console.log(err);
 			}
 		})
-	})
 })
 
 //登出逻辑

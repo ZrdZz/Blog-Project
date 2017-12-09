@@ -12,16 +12,16 @@ const main = require('./routers/main.js');
 
 const app = new Koa();
 const router = new Router();
-const staticPath = './public';
+const staticPath = '/public';
 
 //配置应用模板
-app.use(views(path.join(__dirname, './views'), {extension: 'ejs'}));
+app.use(views(__dirname + '/views', {extension: 'ejs'}));
 
 //处理post请求将formData数据解析到ctx.request.body中
 app.use(body());
 
 //设置静态文件托管
-app.use(static(path.join(__dirname, staticPath)));
+app.use(static(__dirname + staticPath));
 
 //根据不同的功能划分模块
 router.use('/admin', admin.routes(), admin.allowedMethods());

@@ -12,17 +12,15 @@ main.use(async(ctx, next) => {
 		ctx.state.userInfo = JSON.parse(ctx.cookies.get('userMsg'));
 
 		//获取当前登录用户的类型,是否是管理员
-		ctx.state.userInfo.isAdmin = await new Promise(function(resolve, reject){
-			User.findById(ctx.state.userInfo._id, function(err, doc){
+		await User.findById(ctx.state.userInfo._id, function(err, doc){
 				if(doc){
-					resolve(doc.isAdmin);
+					ctx.state.userInfo.isAdmin = doc.isAdmin;
 				}
 
 				if(err){
-					reject(err);
+					console.log(err);
 				}
 			})
-		})
 	}
 
 	ctx.state.categoryId = {},      //通过数据库查询博客分类页面的内容
@@ -31,22 +29,16 @@ main.use(async(ctx, next) => {
 		ctx.state.categoryId.category = categoryQuery;
 	}
 
-  	var contentCount = await new Promise(function(resolve, reject){
-		// Content.find(ctx.state.categoryId).count(function(err, contentCount){       //查询内容数目时也要根据where来约束,否则若某个分类没有内容数目时,下面显示的pages也为内容总个数
-		// 	if(contentCount){
-		// 		resolve(contentCount);
-		// 	}
+	var contentCount;
+  	await Content.find(ctx.state.categoryId).count(function(err, count){
+  		if(count >= 0){
+  			contentCount = count;
+  		}
 
-		// 	if(err){
-		// 		reject(err);
-		// 	}
-		// });
-
-		var count =  Content.find(ctx.state.categoryId).count();
-		if(count){
-			resolve(count);
-		};
-	})
+  		if(err){
+  			console.log(err);
+  		}
+  	});
 
 	ctx.state.contentMsg = {
     	page: Number(ctx.query.page) || 1,      
@@ -58,17 +50,15 @@ main.use(async(ctx, next) => {
     	//获取博客分类
 	ctx.state.data = {};
     
-	ctx.state.data.categories = await new Promise(function(resolve, reject){
-		Category.find().exec(function(err, doc){
-			if(doc){
-				resolve(doc);
-			}
+	await Category.find().exec(function(err, doc){
+		if(doc){
+			ctx.state.data.categories = doc;
+		}
 				
-			if(err){
-				reject(err);
-			}
-		})
-	})  
+		if(err){
+			ctx.state.data.categories = err;
+		}
+	})
 
 	await next();	
 })
