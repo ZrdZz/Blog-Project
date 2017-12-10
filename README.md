@@ -322,8 +322,74 @@ api.post('/user/login', async(ctx) => {
      })
 })
 ```
+### 博客后台管理
 
+博客后台管理代码都类似,全是一些数据库的增删查改操作。
 
+比如给博客添加分类:
+
+通过表单提交分类名称,后台接受到以后先检查是否有名称传送过来,然后检查数据库是否有同名,若没有则保存到数据库。
+
+```
+//博客分类处理
+admin.post('/category/add', async(ctx) => {
+    var name = ctx.request.body.name;
+
+    if(!name){
+	await ctx.render('admin/error', {message: '名称不能为空'})
+	return;
+    }
+
+    //查询数据库是否存在同名分类
+    var isExist = await Category.findOne({name: name}, function(err, doc){
+    	if(doc){
+    	    return doc;
+    	}else{
+    	    var category = new Category({name: name});
+    	    category.save();
+    	    return doc;
+        }
+
+        if(err){
+    	    console.log(err);
+        }
+    })
+
+    if(isExist){
+        await ctx.render('admin/error', {message: '分类已存在'});
+    }else{
+        await ctx.render('admin/success', {message: '分类创建成功', url: '/admin/category'});
+    }
+})
+```
+
+展示博客分类的页面:
+
+注意分页的处理,当前页面数不能大于总页面数,也不能小于1。通过数据库查找到数据后传给模板,然后通过循环渲染出来。
+
+```
+admin.get('/category', async(ctx) => {
+    var categoryMsg = ctx.state.categoryMsg;
+    categoryMsg.pages = Math.ceil(categoryMsg.categoryCount / categoryMsg.limit);
+    categoryMsg.page = categoryMsg.page > categoryMsg.pages ? categoryMsg.pages : categoryMsg.page;   //page不能大于pages,不能小于1
+    categoryMsg.page = categoryMsg.page < 1 ? 1 : categoryMsg.page;
+
+    var skip = (categoryMsg.page - 1) * categoryMsg.limit;                 
+
+    //_id中包含时间戳,-1是降序,1是升序
+    await Category.find().sort({_id: -1}).limit(categoryMsg.limit).skip(skip).exec(function(err, doc){
+	if(doc){
+	    ctx.state.categories = doc;
+	}
+
+	if(err){
+	    console.log(err)
+	}
+     })
+
+     await ctx.render('admin/category_index');
+})
+```
 
 
 
