@@ -117,19 +117,17 @@ api.post('/comment/post', async(ctx) => {
 	    	content: ctx.request.body.comment
 	    };
 
-	ctx.body = await new Promise(function(resolve, reject){
-		Content.findOne({_id: contentId}).exec(function(err, doc){
-			if(doc){
-				doc.comments.push(data);     //将评论添加进数组
-				doc.save();
-				responseData.data = doc;     //保存的是这篇文章的相关信息
-				resolve(responseData)
-			}
+	await Content.findOne({_id: contentId}).exec(function(err, doc){
+		if(doc){
+			doc.comments.push(data);     //将评论添加进数组
+			doc.save();
+			responseData.data = doc;     //保存的是这篇文章的相关信息
+			ctx.body = responseData;
+		}
 
-			if(err){
-				reject(err);
-			}
-		})
+		if(err){
+			console.log(err);
+		}
 	})
 })
 
@@ -137,17 +135,15 @@ api.post('/comment/post', async(ctx) => {
 api.post('/comment', async(ctx) => {
 	var contentId = ctx.request.body.contentId;
 
-	ctx.body = await new Promise(function(resolve, reject){
-		Content.findOne({_id: contentId}).exec(function(err, doc){
-			if(doc){		
-				responseData.data = doc;  
-				resolve(responseData)
-			}
+	await Content.findOne({_id: contentId}).exec(function(err, doc){
+		if(doc){		
+			responseData.data = doc;  
+			ctx.body = responseData;
+		}
 
-			if(err){
-				reject(err);
-			}
-		})
+		if(err){
+			console.log(err);
+		}
 	})
 })
 

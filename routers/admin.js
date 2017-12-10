@@ -5,6 +5,8 @@ const Content = require('../models/Content');
 
 const admin = new Router();
 
+var i = 0;
+
 //在这个中间件中得到模板所需的数据
 admin.use(async(ctx, next) => {  
 	//用来格式化日期的一个库,用在模板中
@@ -54,7 +56,9 @@ admin.use(async(ctx, next) => {
 			}
 		})
 
-		await next();
+		if(userInfo.isAdmin){
+			await next();		
+		}			
 	}
 })
 

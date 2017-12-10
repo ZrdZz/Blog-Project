@@ -66,22 +66,21 @@ main.use(async(ctx, next) => {
 main.get('/', async(ctx) => {
 	var contentMsg = ctx.state.contentMsg;
 
-	ctx.state.data.contents = await new Promise(function(resolve, reject){
-		contentMsg.pages = Math.ceil(contentMsg.contentCount / contentMsg.limit);
-		contentMsg.page = contentMsg.page > contentMsg.pages ? contentMsg.pages : contentMsg.page;         //page不能大于pages,不能小于1
-		contentMsg.page = contentMsg.page < 1 ? 1 : contentMsg.page;
+	 
+	contentMsg.pages = Math.ceil(contentMsg.contentCount / contentMsg.limit);
+	contentMsg.page = contentMsg.page > contentMsg.pages ? contentMsg.pages : contentMsg.page;         //page不能大于pages,不能小于1
+	contentMsg.page = contentMsg.page < 1 ? 1 : contentMsg.page;
 
-		var skip = (contentMsg.page - 1) * contentMsg.limit;   
+	var skip = (contentMsg.page - 1) * contentMsg.limit;   
 
-		Content.find(ctx.state.categoryId).limit(contentMsg.limit).skip(skip).populate(['category', 'user']).sort({addTime: -1}).exec(function(err, doc){
-			if(doc){
-				resolve(doc);
-			}
+	await Content.find(ctx.state.categoryId).limit(contentMsg.limit).skip(skip).populate(['category', 'user']).sort({addTime: -1}).exec(function(err, doc){
+		if(doc){
+			ctx.state.data.contents = doc;
+		}
 
-			if(err){
-				reject(err);
-			}
-		})
+		if(err){
+			console.log(err);
+		}
 	})
 	
 	await ctx.render('main/index');
@@ -90,20 +89,7 @@ main.get('/', async(ctx) => {
 //内容详情页
 main.get('view', async(ctx) => {     //路径view前面不能加斜杠!!!
 	var contentId = ctx.query.content;
-
-	var contentarea = await new Promise(function(resolve, reject){
-		Content.findOne({_id: contentId}).populate(['category', 'user']).exec(function(err, doc){
-			if(doc){
-				doc.views++;
-				doc.save();
-				resolve(doc);
-			}
-
-			if(err){
-				reject(err);
-			}
-		})
-	})
+	var contentarea = await Content.findOne({_id: contentId}).populate(['category', 'user']);
 
 	await ctx.render('main/view', {contentarea: contentarea});
 })
