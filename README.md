@@ -81,8 +81,6 @@ koa把很多`async`函数组成处理链,当一个请求到来时,先执行第�
 - `opts`: (optional)
 - `opts.extension`: 模板文件默认的扩展,这样使用时就可以只写文件名
 - `opts.map`: 制定一种文件扩展用什么引擎,`views(__dirname, {map: {html: 'nunjucks'}})`,`.html`结尾的文件使用`numjucks`模板引擎
-- `opts.engineSource`: 不懂是什么意思。。
-- `opts.options`: 也没看懂用在哪。。
 
 示例:
 ```
